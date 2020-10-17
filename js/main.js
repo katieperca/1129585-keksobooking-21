@@ -37,6 +37,7 @@ const housingTypes = {
 const map = document.querySelector(`.map`);
 const mapMainPin = map.querySelector(`.map__pin--main`);
 const filtersFormFields = document.querySelector(`.map__filters`).children;
+const pinContainer = document.querySelector(`.map__pins`);
 const adForm = document.querySelector(`.ad-form`);
 const adFormFields = adForm.children;
 const adFormAddressField = adForm.querySelector(`#address`);
@@ -60,8 +61,7 @@ deactivateForm(filtersFormFields);
 deactivateForm(adFormFields);
 
 const activateForm = (data) => {
-  data = Array.from(data);
-  data.forEach((element) => {
+  Array.from(data).forEach((element) => {
     element.removeAttribute(`disabled`);
   });
 };
@@ -77,6 +77,8 @@ const setAddressField = () => {
   adFormAddressField.value =
     (mainPinParams.X + Math.floor(mainPinParams.WIDTH / 2)) + `, ` + (mainPinParams.Y + mainPinParams.HEIGHT);
 };
+
+setAddressField();
 
 const checkRooms = (quantity) => {
   const capacityOptions = adFormCapacitySelect.querySelectorAll(`option`);
@@ -97,23 +99,23 @@ adFormRoomNumberSelect.addEventListener(`change`, () => {
   checkRooms(adFormRoomNumberSelect.value);
 });
 
+const switchPageToActiveMode = () => {
+  activatePage();
+  setAddressField();
+  renderPins(pinContainer, advertsData);
+  renderCard(cardContainer, advertsData[0]);
+  checkRooms(adFormRoomNumberSelect.value);
+};
+
 mapMainPin.addEventListener(`mousedown`, (evt) => {
   if (evt.button === keyCodes.MOUSE_MAIN_BUTTON) {
-    activatePage();
-    setAddressField();
-    renderPin(pinContainer, advertsData);
-    renderCard(cardContainer, advertsData[0]);
-    checkRooms(adFormRoomNumberSelect.value);
+    switchPageToActiveMode();
   }
 });
 
 mapMainPin.addEventListener(`keydown`, (evt) => {
   if (evt.keyCode === keyCodes.ENTER) {
-    activatePage();
-    setAddressField();
-    renderPin(pinContainer, advertsData);
-    renderCard(cardContainer, advertsData[0]);
-    checkRooms(adFormRoomNumberSelect.value);
+    switchPageToActiveMode();
   }
 });
 
@@ -196,14 +198,11 @@ const createPin = (data) => {
   return pin;
 };
 
-const renderPin = (container, data) => {
+const renderPins = (container, data) => {
   data.forEach((element) => {
     container.appendChild(createPin(element));
   });
 };
-
-const pinContainer = document.querySelector(`.map__pins`);
-renderPin(pinContainer, advertsData);
 
 const fillElement = (value, container, attribute) => {
   if (!value) {
