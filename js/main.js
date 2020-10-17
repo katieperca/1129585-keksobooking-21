@@ -51,8 +51,7 @@ const roomValues = {
 };
 
 const deactivateForm = (data) => {
-  data = Array.from(data);
-  data.forEach((element) => {
+  Array.from(data).forEach((element) => {
     element.setAttribute(`disabled`, `disabled`);
   });
 };
