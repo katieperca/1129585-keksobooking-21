@@ -1,5 +1,10 @@
 'use strict';
 
+const keyCodes = {
+  ENTER: 13,
+  ESC: 27,
+  MOUSE_MAIN_BUTTON: 0
+};
 const pinCoordinateLimits = {
   MIN_X: 320,
   MAX_X: 1100,
@@ -7,6 +12,12 @@ const pinCoordinateLimits = {
   MAX_Y: 630,
   Y_OFFSET: -70,
   X_OFFSET: -25
+};
+const mainPinParams = {
+  X: 570,
+  Y: 375,
+  WIDTH: 65,
+  HEIGHT: 84
 };
 const mockData = {
   PRICES: [1000, 2000, 5000, 10000, 20000, 50000],
@@ -23,6 +34,89 @@ const housingTypes = {
   house: `Дом`,
   bungalow: `Бунгало`
 };
+const map = document.querySelector(`.map`);
+const mapMainPin = map.querySelector(`.map__pin--main`);
+const filtersFormFields = document.querySelector(`.map__filters`).children;
+const pinContainer = document.querySelector(`.map__pins`);
+const adForm = document.querySelector(`.ad-form`);
+const adFormFields = adForm.children;
+const adFormAddressField = adForm.querySelector(`#address`);
+const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
+const adFormCapacitySelect = adForm.querySelector(`#capacity`);
+const roomValues = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
+const deactivateForm = (data) => {
+  Array.from(data).forEach((element) => {
+    element.setAttribute(`disabled`, `disabled`);
+  });
+};
+
+deactivateForm(filtersFormFields);
+deactivateForm(adFormFields);
+
+const activateForm = (data) => {
+  Array.from(data).forEach((element) => {
+    element.removeAttribute(`disabled`);
+  });
+};
+
+const activatePage = () => {
+  map.classList.remove(`map--faded`);
+  activateForm(filtersFormFields);
+  adForm.classList.remove(`ad-form--disabled`);
+  activateForm(adFormFields);
+};
+
+const setAddressField = () => {
+  adFormAddressField.value =
+    (mainPinParams.X + Math.floor(mainPinParams.WIDTH / 2)) + `, ` + (mainPinParams.Y + mainPinParams.HEIGHT);
+};
+
+setAddressField();
+
+const checkRooms = (quantity) => {
+  const capacityOptions = adFormCapacitySelect.querySelectorAll(`option`);
+  capacityOptions.forEach((option) => {
+    option.disabled = true;
+  });
+  roomValues[quantity].forEach((setAmount) => {
+    capacityOptions.forEach((option) => {
+      if (Number(option.value) === setAmount) {
+        option.disabled = false;
+        option.selected = true;
+      }
+    });
+  });
+};
+
+adFormRoomNumberSelect.addEventListener(`change`, () => {
+  checkRooms(adFormRoomNumberSelect.value);
+});
+
+const switchPageToActiveMode = () => {
+  activatePage();
+  setAddressField();
+  renderPins(pinContainer, advertsData);
+  renderCard(cardContainer, advertsData[0]);
+  checkRooms(adFormRoomNumberSelect.value);
+};
+
+mapMainPin.addEventListener(`mousedown`, (evt) => {
+  if (evt.button === keyCodes.MOUSE_MAIN_BUTTON) {
+    switchPageToActiveMode();
+  }
+});
+
+mapMainPin.addEventListener(`keydown`, (evt) => {
+  if (evt.keyCode === keyCodes.ENTER) {
+    switchPageToActiveMode();
+  }
+});
 
 const randomInteger = (min, max) => {
   const rand = min + Math.random() * (max + 1 - min);
@@ -35,12 +129,12 @@ const getRandomValue = (values) => {
 
 const getRandomArray = (arr) => {
   const newArr = [];
+  const incomeArr = arr.slice();
   const randomLength = randomInteger(1, arr.length);
   for (let i = 0; i < randomLength; i++) {
-    const currentIndex = Math.floor(Math.random() * arr.length);
-    const randomElement = arr[currentIndex];
-    newArr.push(randomElement);
-    arr.splice(currentIndex, 1);
+    const currentIndex = Math.floor(Math.random() * incomeArr.length);
+    newArr.push(incomeArr[currentIndex]);
+    incomeArr.splice(currentIndex, 1);
   }
 
   return newArr;
@@ -92,9 +186,6 @@ const createAdverts = (count) => {
 
 const advertsData = createAdverts(advertsCounter);
 
-const map = document.querySelector(`.map`);
-map.classList.remove(`map--faded`);
-
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const createPin = (data) => {
   const pin = pinTemplate.cloneNode(true);
@@ -112,10 +203,7 @@ const renderPins = (container, data) => {
   });
 };
 
-const pinContainer = document.querySelector(`.map__pins`);
-renderPins(pinContainer, advertsData);
-
-const fillElement = function (value, container, attribute) {
+const fillElement = (value, container, attribute) => {
   if (!value) {
     container.setAttribute(`style`, `display: none`);
   } else {
@@ -125,7 +213,7 @@ const fillElement = function (value, container, attribute) {
   return container;
 };
 
-const renderList = function (data, container) {
+const renderList = (data, container) => {
   if (!data) {
     container.setAttribute(`style`, `display: none`);
   } else {
@@ -140,7 +228,7 @@ const renderList = function (data, container) {
   return container;
 };
 
-const renderPhotos = function (data, container) {
+const renderPhotos = (data, container) => {
   if (!data) {
     container.setAttribute(`style`, `display: none`);
   } else {
@@ -159,7 +247,7 @@ const renderPhotos = function (data, container) {
 };
 
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-const createCard = function (data) {
+const createCard = (data) => {
   const card = cardTemplate.cloneNode(true);
   fillElement(data[`author`][`avatar`], card.querySelector(`.popup__avatar`), `src`);
 
@@ -198,8 +286,7 @@ const createCard = function (data) {
 
 const cardContainer = document.querySelector(`.map`);
 const filtersContainer = document.querySelector(`.map__filters-container`);
-const renderCards = function (container, data) {
-  container.insertBefore(createCard(data[0]), filtersContainer);
+const renderCard = (container, data) => {
+  container.insertBefore(createCard(data), filtersContainer);
 };
 
-renderCards(cardContainer, advertsData);
