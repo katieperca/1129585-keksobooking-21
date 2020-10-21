@@ -43,12 +43,23 @@ const adFormFields = adForm.children;
 const adFormAddressField = adForm.querySelector(`#address`);
 const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
 const adFormCapacitySelect = adForm.querySelector(`#capacity`);
+const adFormTimeInInput = adForm.querySelector(`#timein`);
+const adFormTimeOutInput = adForm.querySelector(`#timeout`);
+const adFormHousingTypeSelect = adForm.querySelector(`#type`);
+const adFormPriceForNightInput = adForm.querySelector(`#price`);
 const roomValues = {
   1: [1],
   2: [1, 2],
   3: [1, 2, 3],
   100: [0]
 };
+const housingMinPrice = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+let pinsCreated = false;
 
 const deactivateForm = (data) => {
   Array.from(data).forEach((element) => {
@@ -94,28 +105,40 @@ const checkRooms = (quantity) => {
   });
 };
 
+const inAndOutInputChange = function (evt) {
+  adFormTimeInInput.value = evt.target.value;
+  adFormTimeOutInput.value = evt.target.value;
+};
+
+adFormTimeInInput.addEventListener(`change`, inAndOutInputChange);
+
+adFormTimeOutInput.addEventListener(`change`, inAndOutInputChange);
+
+adFormHousingTypeSelect.addEventListener(`change`, function () {
+  adFormPriceForNightInput.placeholder = housingMinPrice[adFormHousingTypeSelect.value];
+  adFormPriceForNightInput.setAttribute(`min`, housingMinPrice[adFormHousingTypeSelect.value]);
+});
+
 adFormRoomNumberSelect.addEventListener(`change`, () => {
   checkRooms(adFormRoomNumberSelect.value);
 });
 
-const switchPageToActiveMode = () => {
-  activatePage();
-  setAddressField();
-  renderPins(pinContainer, advertsData);
-  renderCard(cardContainer, advertsData[0]);
-  checkRooms(adFormRoomNumberSelect.value);
+const switchPageToActiveMode = (evt) => {
+  if ((evt.button === keyCodes.MOUSE_MAIN_BUTTON || evt.keyCode === keyCodes.ENTER) && !pinsCreated) {
+    activatePage();
+    setAddressField();
+    renderPins(pinContainer, advertsData);
+    renderCard(cardContainer, advertsData[0]);
+    checkRooms(adFormRoomNumberSelect.value);
+  }
 };
 
 mapMainPin.addEventListener(`mousedown`, (evt) => {
-  if (evt.button === keyCodes.MOUSE_MAIN_BUTTON) {
-    switchPageToActiveMode();
-  }
+  switchPageToActiveMode(evt);
 });
 
 mapMainPin.addEventListener(`keydown`, (evt) => {
-  if (evt.keyCode === keyCodes.ENTER) {
-    switchPageToActiveMode();
-  }
+  switchPageToActiveMode(evt);
 });
 
 const randomInteger = (min, max) => {
@@ -186,6 +209,14 @@ const createAdverts = (count) => {
 
 const advertsData = createAdverts(advertsCounter);
 
+const openCard = function (data) {
+  const isMapCard = map.querySelector(`.map__card`);
+  if (isMapCard) {
+    isMapCard.remove();
+  }
+  renderCard(cardContainer, data);
+};
+
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const createPin = (data) => {
   const pin = pinTemplate.cloneNode(true);
@@ -193,6 +224,16 @@ const createPin = (data) => {
   pin.style.top = (data[`location`][`y`] + pinCoordinateLimits.Y_OFFSET) + `px`;
   pin.children[0].src = data[`author`][`avatar`];
   pin.children[0].alt = data[`offer`][`title`];
+
+  pin.addEventListener(`click`, function () {
+    openCard(data);
+  });
+
+  pin.addEventListener(`keydown`, function (evt) {
+    if (evt.keyCode === keyCodes.ENTER) {
+      openCard(data);
+    }
+  });
 
   return pin;
 };
@@ -281,6 +322,22 @@ const createCard = (data) => {
 
   renderPhotos(data[`offer`][`photos`], card.querySelector(`.popup__photos`));
 
+  const popupClose = card.querySelector(`.popup__close`);
+
+  const closeCard = function () {
+    card.remove();
+  };
+
+  popupClose.addEventListener(`click`, function () {
+    closeCard();
+  });
+
+  popupClose.addEventListener(`keydown`, function (evt) {
+    if (evt.key === keyCodes.ENTER) {
+      closeCard();
+    }
+  });
+
   return card;
 };
 
@@ -289,4 +346,3 @@ const filtersContainer = document.querySelector(`.map__filters-container`);
 const renderCard = (container, data) => {
   container.insertBefore(createCard(data), filtersContainer);
 };
-
