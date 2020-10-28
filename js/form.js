@@ -1,6 +1,14 @@
 'use strict';
 
 (() => {
+  const adForm = document.querySelector(`.ad-form`);
+  const adFormAddressField = adForm.querySelector(`#address`);
+  const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
+  const adFormCapacitySelect = adForm.querySelector(`#capacity`);
+  const adFormTimeInInput = adForm.querySelector(`#timein`);
+  const adFormTimeOutInput = adForm.querySelector(`#timeout`);
+  const adFormHousingTypeSelect = adForm.querySelector(`#type`);
+  const adFormPriceForNightInput = adForm.querySelector(`#price`);
   const roomValues = {
     1: [1],
     2: [1, 2],
@@ -13,20 +21,6 @@
     house: 5000,
     palace: 10000
   };
-  const mainPinParams = {
-    X: 570,
-    Y: 375,
-    WIDTH: 65,
-    HEIGHT: 84
-  };
-  const adForm = document.querySelector(`.ad-form`);
-  const adFormAddressField = adForm.querySelector(`#address`);
-  const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
-  const adFormCapacitySelect = adForm.querySelector(`#capacity`);
-  const adFormTimeInInput = adForm.querySelector(`#timein`);
-  const adFormTimeOutInput = adForm.querySelector(`#timeout`);
-  const adFormHousingTypeSelect = adForm.querySelector(`#type`);
-  const adFormPriceForNightInput = adForm.querySelector(`#price`);
 
   const deactivateForm = (data) => {
     Array.from(data).forEach((element) => {
@@ -40,9 +34,8 @@
     });
   };
 
-  const setAddressField = () => {
-    adFormAddressField.value =
-      (mainPinParams.X + Math.floor(mainPinParams.WIDTH / 2)) + `, ` + (mainPinParams.Y + mainPinParams.HEIGHT);
+  const setAddressField = (coords) => {
+    adFormAddressField.value = coords;
   };
 
   const checkRooms = (quantity) => {
@@ -60,7 +53,7 @@
     });
   };
 
-  const inAndOutInputChange = function (evt) {
+  const inAndOutInputChange = (evt) => {
     adFormTimeInInput.value = evt.target.value;
     adFormTimeOutInput.value = evt.target.value;
   };
@@ -69,7 +62,7 @@
 
   adFormTimeOutInput.addEventListener(`change`, inAndOutInputChange);
 
-  adFormHousingTypeSelect.addEventListener(`change`, function () {
+  adFormHousingTypeSelect.addEventListener(`change`, () => {
     adFormPriceForNightInput.placeholder = housingMinPrice[adFormHousingTypeSelect.value];
     adFormPriceForNightInput.setAttribute(`min`, housingMinPrice[adFormHousingTypeSelect.value]);
   });

@@ -59,6 +59,7 @@
   };
 
   window.util = {
+    keyCodes,
     isEnterEvent,
     isEscEvent,
     isMouseMainButtonEvent,
