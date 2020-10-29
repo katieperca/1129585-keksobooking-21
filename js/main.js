@@ -15,7 +15,7 @@ let pinsCreated = false;
 const deactivatePage = () => {
   window.form.deactivateForm(filtersFormFields);
   window.form.deactivateForm(adFormFields);
-  window.form.setAddressField(window.map.getPinCoords());
+  window.form.setAddressField(window.util.getMainPinCoords());
 };
 
 deactivatePage();
@@ -31,7 +31,7 @@ const switchPageToActiveMode = (evt) => {
   if (!pinsCreated) {
     window.util.isEnterEvent(evt, activatePage);
     window.util.isMouseMainButtonEvent(evt, activatePage);
-    window.form.setAddressField(window.map.getPinCoords());
+    window.form.setAddressField(window.util.getMainPinCoords());
     window.pin.renderPins(pinContainer, advertsData);
     // window.card.renderCard(cardContainer, advertsData[0]);
     window.form.checkRooms(adFormRoomNumberSelect.value);
