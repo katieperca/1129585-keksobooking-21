@@ -6,6 +6,13 @@
     ESC: 27,
     MOUSE_MAIN_BUTTON: 0
   };
+  const mainPinParam = {
+    WIDTH: 65,
+    HEIGHT: 84,
+    PINTIP_HEIGHT: 22
+  };
+  const map = document.querySelector(`.map`);
+  const mapPinMain = map.querySelector(`.map__pin--main`);
 
   const isEnterEvent = (evt, action) => {
     if (evt.keyCode === keyCodes.ENTER) {
@@ -58,13 +65,31 @@
     return randomTitle;
   };
 
+  const getMainPinCoords = () => {
+    let coordinateX;
+    let coordinateY;
+    if (map.classList.contains(`map--faded`)) {
+      coordinateX = Math.floor(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
+      coordinateY = Math.floor(mapPinMain.offsetTop + mapPinMain.offsetHeight / 2);
+    } else {
+      coordinateX = Math.floor(mapPinMain.offsetLeft + mapPinMain.offsetWidth / 2);
+      coordinateY = Math.floor(mapPinMain.offsetTop + mapPinMain.offsetHeight + mainPinParam.PINTIP_HEIGHT);
+    }
+    const coordinates = coordinateX + `, ` + coordinateY;
+
+    return coordinates;
+  };
+
   window.util = {
+    keyCodes,
+    mainPinParam,
     isEnterEvent,
     isEscEvent,
     isMouseMainButtonEvent,
     getRandomInteger,
     getRandomValue,
     getRandomArray,
-    getRandomTitle
+    getRandomTitle,
+    getMainPinCoords
   };
 })();

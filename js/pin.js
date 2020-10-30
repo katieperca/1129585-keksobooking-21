@@ -2,22 +2,12 @@
 
 (() => {
   const pinCoordinateLimits = {
-    MIN_X: 320,
+    MIN_X: 300,
     MAX_X: 1100,
     MIN_Y: 130,
     MAX_Y: 630,
     Y_OFFSET: -70,
     X_OFFSET: -25
-  };
-  const map = document.querySelector(`.map`);
-  const cardContainer = document.querySelector(`.map`);
-
-  const openCard = function (data) {
-    const isMapCard = map.querySelector(`.map__card`);
-    if (isMapCard) {
-      isMapCard.remove();
-    }
-    window.map.renderCard(cardContainer, data);
   };
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
@@ -28,19 +18,32 @@
     pin.children[0].src = data[`author`][`avatar`];
     pin.children[0].alt = data[`offer`][`title`];
 
-    pin.addEventListener(`click`, function () {
-      openCard(data);
-    });
+    const onPinClick = () => {
+      window.card.openCard(data);
+    };
 
-    pin.addEventListener(`keydown`, function (evt) {
-      window.util.isEnterEvent(evt, openCard(data));
+    const onPinEnterPress = () => {
+      window.card.openCard(data);
+    };
+
+    pin.addEventListener(`click`, onPinClick);
+
+    pin.addEventListener(`keydown`, (evt) => {
+      window.util.isEnterEvent(evt, onPinEnterPress);
     });
 
     return pin;
   };
 
+  const renderPins = (container, data) => {
+    data.forEach((element) => {
+      container.appendChild(createPin(element));
+    });
+  };
+
   window.pin = {
     pinCoordinateLimits,
-    createPin
+    createPin,
+    renderPins
   };
 })();
