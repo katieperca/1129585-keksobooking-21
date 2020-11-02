@@ -1,7 +1,7 @@
 'use strict';
 
 (() => {
-  const pinCoordinateLimits = {
+  const PinCoordinateLimit = {
     MIN_X: 300,
     MAX_X: 1100,
     MIN_Y: 130,
@@ -13,8 +13,8 @@
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const createPin = (data) => {
     const pin = pinTemplate.cloneNode(true);
-    pin.style.left = (data[`location`][`x`] + pinCoordinateLimits.X_OFFSET) + `px`;
-    pin.style.top = (data[`location`][`y`] + pinCoordinateLimits.Y_OFFSET) + `px`;
+    pin.style.left = (data[`location`][`x`] + PinCoordinateLimit.X_OFFSET) + `px`;
+    pin.style.top = (data[`location`][`y`] + PinCoordinateLimit.Y_OFFSET) + `px`;
     pin.children[0].src = data[`author`][`avatar`];
     pin.children[0].alt = data[`offer`][`title`];
 
@@ -42,7 +42,7 @@
   };
 
   window.pin = {
-    pinCoordinateLimits,
+    PinCoordinateLimit,
     createPin,
     renderPins
   };

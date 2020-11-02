@@ -14,8 +14,8 @@
     const adverts = [];
 
     for (let i = 0; i < count; i++) {
-      const locationX = window.util.getRandomInteger(window.pin.pinCoordinateLimits.MIN_X, window.pin.pinCoordinateLimits.MAX_X);
-      const locationY = window.util.getRandomInteger(window.pin.pinCoordinateLimits.MIN_Y, window.pin.pinCoordinateLimits.MAX_Y);
+      const locationX = window.util.getRandomInteger(window.pin.PinCoordinateLimit.MIN_X, window.pin.PinCoordinateLimit.MAX_X);
+      const locationY = window.util.getRandomInteger(window.pin.PinCoordinateLimit.MIN_Y, window.pin.PinCoordinateLimit.MAX_Y);
 
       adverts.push({
         author: {

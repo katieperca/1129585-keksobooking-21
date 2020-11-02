@@ -5,10 +5,10 @@
   const mapPinsList = map.querySelector(`.map__pins`);
   const mapPinMain = map.querySelector(`.map__pin--main`);
 
-  const POSITION_MIN_X = 0 - (window.util.mainPinParam.WIDTH / 2);
-  const POSITION_MAX_X = mapPinsList.clientWidth - (window.util.mainPinParam.WIDTH / 2);
-  const POSITION_MIN_Y = 130 - window.util.mainPinParam.HEIGHT;
-  const POSITION_MAX_Y = 630 - window.util.mainPinParam.HEIGHT;
+  const POSITION_MIN_X = 0 - (window.util.MainPinParam.WIDTH / 2);
+  const POSITION_MAX_X = mapPinsList.clientWidth - (window.util.MainPinParam.WIDTH / 2);
+  const POSITION_MIN_Y = 130 - window.util.MainPinParam.HEIGHT;
+  const POSITION_MAX_Y = 630 - window.util.MainPinParam.HEIGHT;
 
   mapPinMain.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
