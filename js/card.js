@@ -1,6 +1,11 @@
 'use strict';
 
 (() => {
+  const ImageData = {
+    IMG_WIDTH: 45,
+    IMG_HEIGHT: 40,
+    IMG_ALT: `Фотография жилья`
+  };
   const housingTypes = {
     palace: `Дворец`,
     flat: `Квартира`,
@@ -42,9 +47,9 @@
         const img = document.createElement(`img`);
         img.classList.add(`popup__photo`);
         img.setAttribute(`src`, element);
-        img.setAttribute(`width`, `45`);
-        img.setAttribute(`height`, `40`);
-        img.setAttribute(`alt`, `Фотография жилья`);
+        img.setAttribute(`width`, ImageData.IMG_WIDTH);
+        img.setAttribute(`height`, ImageData.IMG_HEIGHT);
+        img.setAttribute(`alt`, ImageData.IMG_ALT);
         container.appendChild(img);
       });
     }
@@ -119,15 +124,11 @@
 
   const renderCard = (container, data) => {
     const filtersContainer = document.querySelector(`.map__filters-container`);
-    container.insertBefore(window.card.createCard(data), filtersContainer);
+    container.insertBefore(createCard(data), filtersContainer);
   };
 
   window.card = {
-    fillElement,
-    renderList,
-    renderPhotos,
     openCard,
-    createCard,
     renderCard
   };
 })();
