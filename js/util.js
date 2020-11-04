@@ -13,6 +13,8 @@
   };
   const map = document.querySelector(`.map`);
   const mapPinMain = map.querySelector(`.map__pin--main`);
+  const startPositionX = mapPinMain.offsetLeft;
+  const startPositionY = mapPinMain.offsetTop;
 
   const isEnterEvent = (evt, action) => {
     if (evt.keyCode === KeyCode.ENTER) {
@@ -80,6 +82,11 @@
     return coordinates;
   };
 
+  const setMainPinCenter = () => {
+    mapPinMain.style.left = startPositionX + `px`;
+    mapPinMain.style.top = startPositionY + `px`;
+  };
+
   window.util = {
     KeyCode,
     MainPinParam,
@@ -90,6 +97,7 @@
     getRandomValue,
     getRandomArray,
     getRandomTitle,
-    getMainPinCoords
+    getMainPinCoords,
+    setMainPinCenter
   };
 })();

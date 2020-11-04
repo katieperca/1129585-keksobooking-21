@@ -9,6 +9,10 @@
   const adFormTimeOutInput = adForm.querySelector(`#timeout`);
   const adFormHousingTypeSelect = adForm.querySelector(`#type`);
   const adFormPriceForNightInput = adForm.querySelector(`#price`);
+  const mainPage = document.querySelector(`main`);
+  const map = document.querySelector(`.map`);
+  const adFormFields = adForm.children;
+  const filtersFormFields = document.querySelector(`.map__filters`).children;
   const roomValues = {
     1: [1],
     2: [1, 2],
@@ -20,6 +24,14 @@
     flat: 1000,
     house: 5000,
     palace: 10000
+  };
+
+  const deactivatePage = () => {
+    map.classList.add(`map--faded`);
+    adForm.classList.add(`ad-form--disabled`);
+    deactivateForm(filtersFormFields);
+    deactivateForm(adFormFields);
+    setAddressField(window.util.getMainPinCoords());
   };
 
   const deactivateForm = (data) => {
@@ -71,7 +83,48 @@
     checkRooms(adFormRoomNumberSelect.value);
   });
 
+  const showSuccessMessage = () => {
+    const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+    const successMessage = successTemplate.cloneNode(true);
+    mainPage.appendChild(successMessage);
+    const removeSuccessMessage = () => {
+      successMessage.remove();
+    };
+    document.addEventListener(`click`, removeSuccessMessage);
+    document.addEventListener(`keydown`, (evt) => {
+      window.util.isEscEvent(evt, removeSuccessMessage);
+    });
+  };
+
+  const showErrorMessage = () => {
+    const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
+    const errorMessage = errorTemplate.cloneNode(true);
+    const removeErrorMessage = () => {
+      errorMessage.remove();
+    };
+    mainPage.appendChild(errorMessage);
+    errorMessage.querySelector(`.error__button`).addEventListener(`click`, removeErrorMessage);
+    errorMessage.addEventListener(`click`, removeErrorMessage);
+    document.addEventListener(`keydown`, (evt) => {
+      window.util.isEscEvent(evt, removeErrorMessage);
+    });
+  };
+
+  adForm.addEventListener(`submit`, (evt) => {
+    window.server.uploadData(new FormData(adForm), showSuccessMessage, showErrorMessage);
+    evt.preventDefault();
+    deactivatePage();
+    window.pin.removePins();
+    window.util.setMainPinCenter();
+    adForm.reset();
+  });
+
+  adForm.addEventListener(`reset`, () => {
+    adForm.reset();
+  });
+
   window.form = {
+    deactivatePage,
     deactivateForm,
     activateForm,
     setAddressField,
