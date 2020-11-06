@@ -124,11 +124,21 @@
 
   const renderCard = (container, data) => {
     const filtersContainer = document.querySelector(`.map__filters-container`);
-    container.insertBefore(createCard(data), filtersContainer);
+    if (data) {
+      container.insertBefore(createCard(data), filtersContainer);
+    }
+  };
+
+  const removeCard = () => {
+    const card = document.querySelector(`.map__card`);
+    if (card) {
+      card.remove();
+    }
   };
 
   window.card = {
     openCard,
-    renderCard
+    renderCard,
+    removeCard
   };
 })();

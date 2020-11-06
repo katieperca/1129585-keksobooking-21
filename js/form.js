@@ -114,7 +114,7 @@
     window.server.uploadData(new FormData(adForm), showSuccessMessage, showErrorMessage);
     evt.preventDefault();
     deactivatePage();
-    window.pin.removePins();
+    window.util.clearMap();
     window.util.setMainPinCenter();
     adForm.reset();
   });
