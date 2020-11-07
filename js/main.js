@@ -2,7 +2,7 @@
 
 const map = document.querySelector(`.map`);
 const mapMainPin = map.querySelector(`.map__pin--main`);
-const pinContainer = document.querySelector(`.map__pins`);
+// const pinContainer = document.querySelector(`.map__pins`);
 const adForm = document.querySelector(`.ad-form`);
 const adFormFields = adForm.children;
 const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
@@ -29,10 +29,11 @@ const activatePage = () => {
 
 const onLoadSuccess = (evt, data) => {
   // if (!pinsCreated) {
+  window.data = data;
   window.util.isEnterEvent(evt, activatePage);
   window.util.isMouseMainButtonEvent(evt, activatePage);
   window.form.setAddressField(window.util.getMainPinCoords());
-  window.pin.renderPins(pinContainer, data);
+  window.util.renderData(window.data, true);
   window.form.checkRooms(adFormRoomNumberSelect.value);
   // pinsCreated = true;
   // }

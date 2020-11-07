@@ -11,8 +11,10 @@
     HEIGHT: 82,
     PINTIP_HEIGHT: 17
   };
+  const PINS_COUNT = 5;
   const map = document.querySelector(`.map`);
   const mapPinMain = map.querySelector(`.map__pin--main`);
+  const pinContainer = map.querySelector(`.map__pins`);
   const startPositionX = mapPinMain.offsetLeft;
   const startPositionY = mapPinMain.offsetTop;
 
@@ -87,6 +89,18 @@
     mapPinMain.style.top = startPositionY + `px`;
   };
 
+  const clearMap = () => {
+    window.card.removeCard();
+    window.pin.removePins();
+  };
+
+  const renderData = (data, showCard) => {
+    window.pin.renderPins(pinContainer, data.slice(0, PINS_COUNT));
+    if (showCard) {
+      window.card.renderCard(map, data[0]);
+    }
+  };
+
   window.util = {
     KeyCode,
     MainPinParam,
@@ -98,6 +112,8 @@
     getRandomArray,
     getRandomTitle,
     getMainPinCoords,
-    setMainPinCenter
+    setMainPinCenter,
+    clearMap,
+    renderData
   };
 })();
