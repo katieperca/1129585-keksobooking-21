@@ -33,7 +33,7 @@ const onLoadSuccess = (evt, data) => {
   window.util.isEnterEvent(evt, activatePage);
   window.util.isMouseMainButtonEvent(evt, activatePage);
   window.form.setAddressField(window.util.getMainPinCoords());
-  window.util.renderData(window.data, true);
+  window.util.renderData(window.data);
   window.form.checkRooms(adFormRoomNumberSelect.value);
   // pinsCreated = true;
   // }
