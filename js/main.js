@@ -8,23 +8,37 @@ const adFormFields = adForm.children;
 const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
 const filtersFormFields = document.querySelector(`.map__filters`).children;
 // const cardContainer = document.querySelector(`.map`);
-// let pinsCreated = false;
+let pinsCreated = false;
 
-// const deactivatePage = () => {
-//   map.classList.add('map--faded');
-//   adForm.classList.add('ad-form--disabled');
-//   window.form.deactivateForm(filtersFormFields);
-//   window.form.deactivateForm(adFormFields);
-//   window.form.setAddressField(window.util.getMainPinCoords());
-// };
+const onMainPinMousedown = (evt) => {
+  switchPageToActiveMode(evt);
+  // mapMainPin.removeEventListener(`mousedown`, onMainPinMousedown);
+};
 
-window.form.deactivatePage();
+const onMainPinEnterPress = (evt) => {
+  switchPageToActiveMode(evt);
+  // mapMainPin.removeEventListener(`keydown`, onMainPinEnterPress);
+};
+
+const deactivatePage = () => {
+  map.classList.add(`map--faded`);
+  adForm.classList.add(`ad-form--disabled`);
+  window.form.deactivateForm(filtersFormFields);
+  window.form.deactivateForm(adFormFields);
+  window.form.setAddressField(window.util.getMainPinCoords());
+  mapMainPin.addEventListener(`mousedown`, onMainPinMousedown);
+  mapMainPin.addEventListener(`keydown`, onMainPinEnterPress);
+};
+
+deactivatePage();
 
 const activatePage = () => {
   map.classList.remove(`map--faded`);
-  window.form.activateForm(filtersFormFields);
   adForm.classList.remove(`ad-form--disabled`);
+  window.form.activateForm(filtersFormFields);
   window.form.activateForm(adFormFields);
+  mapMainPin.removeEventListener(`mousedown`, onMainPinMousedown);
+  mapMainPin.removeEventListener(`keydown`, onMainPinEnterPress);
 };
 
 const onLoadSuccess = (evt, data) => {
@@ -33,10 +47,12 @@ const onLoadSuccess = (evt, data) => {
   window.util.isEnterEvent(evt, activatePage);
   window.util.isMouseMainButtonEvent(evt, activatePage);
   window.form.setAddressField(window.util.getMainPinCoords());
-  window.util.renderData(window.data);
+  if (!pinsCreated) {
+    window.util.renderData(window.data);
+  }
+  // window.util.renderData(window.data);
   window.form.checkRooms(adFormRoomNumberSelect.value);
   // pinsCreated = true;
-  // }
 };
 
 const onErrorLoad = (errorMessage) => {
@@ -55,15 +71,6 @@ const switchPageToActiveMode = (evt) => {
   window.server.loadData(onLoadSuccess, onErrorLoad, evt);
 };
 
-const onMainPinMousedown = (evt) => {
-  switchPageToActiveMode(evt);
-  // mapMainPin.removeEventListener(`mousedown`, onMainPinMousedown);
+window.main = {
+  deactivatePage
 };
-
-const onMainPinEnterPress = (evt) => {
-  switchPageToActiveMode(evt);
-  // mapMainPin.removeEventListener(`keydown`, onMainPinEnterPress);
-};
-
-mapMainPin.addEventListener(`mousedown`, onMainPinMousedown);
-mapMainPin.addEventListener(`keydown`, onMainPinEnterPress);
