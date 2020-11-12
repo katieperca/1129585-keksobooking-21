@@ -1,17 +1,15 @@
 'use strict';
 
-const adForm = document.querySelector(`.ad-form`);
-const adFormAddressField = adForm.querySelector(`#address`);
-const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
-const adFormCapacitySelect = adForm.querySelector(`#capacity`);
-const adFormTimeInInput = adForm.querySelector(`#timein`);
-const adFormTimeOutInput = adForm.querySelector(`#timeout`);
-const adFormHousingTypeSelect = adForm.querySelector(`#type`);
-const adFormPriceForNightInput = adForm.querySelector(`#price`);
 const mainPage = document.querySelector(`main`);
-// const map = document.querySelector(`.map`);
-// const adFormFields = adForm.children;
-// const filtersFormFields = document.querySelector(`.map__filters`).children;
+const adForm = document.querySelector(`.ad-form`);
+const adFormAddress = adForm.querySelector(`#address`);
+const adFormRoomNumber = adForm.querySelector(`#room_number`);
+const adFormCapacity = adForm.querySelector(`#capacity`);
+const adFormTimeIn = adForm.querySelector(`#timein`);
+const adFormTimeOut = adForm.querySelector(`#timeout`);
+const adFormHousingType = adForm.querySelector(`#type`);
+const adFormPriceForNight = adForm.querySelector(`#price`);
+const adFormResetButton = adForm.querySelector(`.ad-form__reset`);
 const roomValues = {
   1: [1],
   2: [1, 2],
@@ -23,6 +21,12 @@ const housingMinPrice = {
   flat: 1000,
   house: 5000,
   palace: 10000
+};
+const housingMaxPrice = {
+  bungalow: 999,
+  flat: 4999,
+  house: 9999,
+  palace: Infinity
 };
 
 const deactivateForm = (data) => {
@@ -38,11 +42,11 @@ const activateForm = (data) => {
 };
 
 const setAddressField = (coords) => {
-  adFormAddressField.value = coords;
+  adFormAddress.value = coords;
 };
 
 const checkRooms = (quantity) => {
-  const capacityOptions = adFormCapacitySelect.querySelectorAll(`option`);
+  const capacityOptions = adFormCapacity.querySelectorAll(`option`);
   capacityOptions.forEach((option) => {
     option.disabled = true;
   });
@@ -56,22 +60,24 @@ const checkRooms = (quantity) => {
   });
 };
 
-const inAndOutInputChange = (evt) => {
-  adFormTimeInInput.value = evt.target.value;
-  adFormTimeOutInput.value = evt.target.value;
+const onInAndOutChange = (evt) => {
+  adFormTimeIn.value = evt.target.value;
+  adFormTimeOut.value = evt.target.value;
 };
 
-adFormTimeInInput.addEventListener(`change`, inAndOutInputChange);
+adFormTimeIn.addEventListener(`change`, onInAndOutChange);
+adFormTimeOut.addEventListener(`change`, onInAndOutChange);
 
-adFormTimeOutInput.addEventListener(`change`, inAndOutInputChange);
+const onHousingTypeChange = () => {
+  adFormPriceForNight.placeholder = housingMinPrice[adFormHousingType.value];
+  adFormPriceForNight.setAttribute(`min`, housingMinPrice[adFormHousingType.value]);
+  adFormPriceForNight.setAttribute(`max`, housingMaxPrice[adFormHousingType.value]);
+};
 
-adFormHousingTypeSelect.addEventListener(`change`, () => {
-  adFormPriceForNightInput.placeholder = housingMinPrice[adFormHousingTypeSelect.value];
-  adFormPriceForNightInput.setAttribute(`min`, housingMinPrice[adFormHousingTypeSelect.value]);
-});
+adFormHousingType.addEventListener(`change`, onHousingTypeChange);
 
-adFormRoomNumberSelect.addEventListener(`change`, () => {
-  checkRooms(adFormRoomNumberSelect.value);
+adFormRoomNumber.addEventListener(`change`, () => {
+  checkRooms(adFormRoomNumber.value);
 });
 
 const showSuccessMessage = () => {
@@ -80,25 +86,44 @@ const showSuccessMessage = () => {
   mainPage.appendChild(successMessage);
   const removeSuccessMessage = () => {
     successMessage.remove();
+    successMessage.removeEventListener(`click`, removeSuccessMessage);
   };
-  document.addEventListener(`click`, removeSuccessMessage);
-  document.addEventListener(`keydown`, (evt) => {
-    window.util.isEscEvent(evt, removeSuccessMessage);
-  });
+  successMessage.addEventListener(`click`, removeSuccessMessage);
+
+  const onSuccessMessageEscPress = (evt) => {
+    if (evt.keyCode === window.util.KeyCode.ESC) {
+      successMessage.remove();
+      successMessage.removeEventListener(`keydown`, onSuccessMessageEscPress);
+    }
+  };
+  successMessage.addEventListener(`keydown`, onSuccessMessageEscPress);
 };
 
 const showErrorMessage = () => {
   const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
   const errorMessage = errorTemplate.cloneNode(true);
-  const removeErrorMessage = () => {
-    errorMessage.remove();
-  };
+  const errorButton = errorMessage.querySelector(`.error__button`);
   mainPage.appendChild(errorMessage);
-  errorMessage.querySelector(`.error__button`).addEventListener(`click`, removeErrorMessage);
-  errorMessage.addEventListener(`click`, removeErrorMessage);
-  document.addEventListener(`keydown`, (evt) => {
-    window.util.isEscEvent(evt, removeErrorMessage);
-  });
+
+  const onErrorMessageClick = () => {
+    errorMessage.remove();
+    errorMessage.removeEventListener(`click`, onErrorMessageClick);
+  };
+  errorMessage.addEventListener(`click`, onErrorMessageClick);
+
+  const onErrorButtonClick = () => {
+    errorMessage.remove();
+    errorButton.removeEventListener(`click`, onErrorButtonClick);
+  };
+  errorButton.addEventListener(`click`, onErrorButtonClick);
+
+  const onErrorMessageEscPress = (evt) => {
+    if (evt.keyCode === window.util.KeyCode.ESC) {
+      errorMessage.remove();
+      errorMessage.removeEventListener(`keydown`, onErrorMessageEscPress);
+    }
+  };
+  errorMessage.addEventListener(`keydown`, onErrorMessageEscPress);
 };
 
 const resetPage = () => {
@@ -115,20 +140,19 @@ const onAdFormSubmit = (evt) => {
   evt.preventDefault();
   window.server.uploadData(new FormData(adForm), showSuccessMessage, showErrorMessage);
   resetPage();
-  // setAddressField(window.util.getMainPinCoords());
 };
 
-const onAdFormReset = () => {
+const onAdFormResetButtonClick = () => {
   resetPage();
 };
 
 adForm.addEventListener(`submit`, onAdFormSubmit);
-adForm.addEventListener(`reset`, onAdFormReset);
+adFormResetButton.addEventListener(`click`, onAdFormResetButtonClick);
 
 window.form = {
   deactivateForm,
   activateForm,
   setAddressField,
   checkRooms,
-  inAndOutInputChange
+  onHousingTypeChange
 };

@@ -102,21 +102,30 @@ const createCard = (data) => {
   const popupClose = card.querySelector(`.popup__close`);
 
   const closeCard = function () {
+    const activePin = document.querySelector(`.map__pin--active`);
+    if (activePin) {
+      activePin.classList.remove(`map__pin--active`);
+    }
     card.remove();
-    popupClose.removeEventListener(`click`, onPopupCloseClick);
-    document.removeEventListener(`keydown`, onCardEscPress);
   };
 
   const onCardEscPress = (evt) => {
-    window.util.isEscEvent(evt, closeCard);
+    if (evt.keyCode === window.util.KeyCode.ESC) {
+      const activePin = document.querySelector(`.map__pin--active`);
+      if (activePin) {
+        activePin.classList.remove(`map__pin--active`);
+      }
+      closeCard();
+      document.removeEventListener(`keydown`, onCardEscPress);
+    }
   };
 
   const onPopupCloseClick = () => {
     closeCard();
+    popupClose.removeEventListener(`click`, onPopupCloseClick);
   };
 
   popupClose.addEventListener(`click`, onPopupCloseClick);
-
   document.addEventListener(`keydown`, onCardEscPress);
   return card;
 };

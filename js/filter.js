@@ -1,21 +1,21 @@
 'use strict';
 
 const TYPE_ANY = `any`;
-const priceRange = {
-  LOW: 1000,
-  HIGH: 50000
-};
-const priceType = {
-  LOW: `low`,
-  MIDDLE: `middle`,
-  HIGH: `high`
-};
 const filtersForm = document.querySelector(`.map__filters`);
 const filterHousingType = filtersForm.querySelector(`#housing-type`);
 const filterHousingPrice = filtersForm.querySelector(`#housing-price`);
 const filterHousingRooms = filtersForm.querySelector(`#housing-rooms`);
 const filterHousingGuests = filtersForm.querySelector(`#housing-guests`);
 const filterHousingReatures = filtersForm.querySelector(`#housing-features`);
+const priceRange = {
+  low: 1000,
+  high: 50000
+};
+const priceType = {
+  low: `low`,
+  middle: `middle`,
+  high: `high`
+};
 
 const resetFilters = () => {
   filtersForm.reset();
@@ -28,12 +28,12 @@ const filterByHousingType = (data) => {
 
 const filterByHousingPrice = (data) => {
   switch (filterHousingPrice.value) {
-    case priceType.LOW:
-      return data.offer.price < priceRange.LOW;
-    case priceType.MIDDLE:
-      return data.offer.price >= priceRange.LOW && data.offer.price <= priceRange.HIGH;
-    case priceType.HIGH:
-      return data.offer.price >= priceRange.HIGH;
+    case priceType.low:
+      return data.offer.price < priceRange.low;
+    case priceType.middle:
+      return data.offer.price >= priceRange.low && data.offer.price <= priceRange.high;
+    case priceType.high:
+      return data.offer.price >= priceRange.high;
   }
   return true;
 };
@@ -66,7 +66,6 @@ const filterData = (data) => {
 const showFiltredData = () => {
   const filtredData = window.data.filter(filterData);
   window.util.clearMap();
-  // window.util.renderData(filtredData);
   window.debounce(window.util.renderData(filtredData));
 };
 

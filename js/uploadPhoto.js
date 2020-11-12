@@ -1,7 +1,7 @@
 'use strict';
 
 const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
-const photoParams = {
+const PhotoParam = {
   WIDTH: 70,
   HEIGHT: 70
 };
@@ -49,8 +49,8 @@ const onPhotoUpload = () => {
       photoPreview.src = reader.result;
       adFormPhotoPreview.innerHTML = ``;
       photoPreview.alt = `Фотография жилья`;
-      photoPreview.style.maxWidth = photoParams.WIDTH + `px`;
-      photoPreview.style.maxHeight = photoParams.HEIGHT + `px`;
+      photoPreview.style.maxWidth = PhotoParam.WIDTH + `px`;
+      photoPreview.style.maxHeight = PhotoParam.HEIGHT + `px`;
       adFormPhotoPreview.append(photoPreview);
     });
 

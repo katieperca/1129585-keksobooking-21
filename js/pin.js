@@ -17,7 +17,7 @@ const createPin = (data) => {
   pin.children[0].src = data[`author`][`avatar`];
   pin.children[0].alt = data[`offer`][`title`];
 
-  const isPinActive = () => {
+  const setPinActive = () => {
     const activePin = document.querySelector(`.map__pin--active`);
     if (activePin) {
       activePin.classList.remove(`map__pin--active`);
@@ -26,20 +26,27 @@ const createPin = (data) => {
   };
 
   const onPinClick = () => {
+    const activeCard = document.querySelector(`.map__card`);
+    if (activeCard) {
+      activeCard.remove();
+    }
     window.card.openCard(data);
-    isPinActive();
+    setPinActive();
   };
 
   const onPinEnterPress = () => {
-    window.card.openCard(data);
-    isPinActive();
+    if (evt.keyCode === window.util.KeyCode.ENTER) {
+      const activeCard = document.querySelector(`.map__card`);
+      if (activeCard) {
+        activeCard.remove();
+      }
+      window.card.openCard(data);
+      setPinActive();
+    }
   };
 
   pin.addEventListener(`click`, onPinClick);
-
-  pin.addEventListener(`keydown`, (evt) => {
-    window.util.isEnterEvent(evt, onPinEnterPress);
-  });
+  pin.addEventListener(`keydown`, onPinEnterPress);
 
   return pin;
 };

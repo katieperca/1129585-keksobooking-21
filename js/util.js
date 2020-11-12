@@ -95,9 +95,6 @@ const clearMap = () => {
 
 const renderData = (data) => {
   window.pin.renderPins(pinContainer, data.slice(0, PINS_COUNT));
-  // if (showCard) {
-  //   window.card.renderCard(map, data[0]);
-  // }
 };
 
 window.util = {

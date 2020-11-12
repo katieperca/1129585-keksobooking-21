@@ -2,22 +2,20 @@
 
 const map = document.querySelector(`.map`);
 const mapMainPin = map.querySelector(`.map__pin--main`);
-// const pinContainer = document.querySelector(`.map__pins`);
 const adForm = document.querySelector(`.ad-form`);
 const adFormFields = adForm.children;
-const adFormRoomNumberSelect = adForm.querySelector(`#room_number`);
+const adFormRoomNumber = adForm.querySelector(`#room_number`);
 const filtersFormFields = document.querySelector(`.map__filters`).children;
-// const cardContainer = document.querySelector(`.map`);
 let pinsCreated = false;
 
 const onMainPinMousedown = (evt) => {
   switchPageToActiveMode(evt);
-  // mapMainPin.removeEventListener(`mousedown`, onMainPinMousedown);
 };
 
 const onMainPinEnterPress = (evt) => {
-  switchPageToActiveMode(evt);
-  // mapMainPin.removeEventListener(`keydown`, onMainPinEnterPress);
+  if (evt.keyCode === window.util.KeyCode.ENTER) {
+    switchPageToActiveMode(evt);
+  }
 };
 
 const deactivatePage = () => {
@@ -37,12 +35,12 @@ const activatePage = () => {
   adForm.classList.remove(`ad-form--disabled`);
   window.form.activateForm(filtersFormFields);
   window.form.activateForm(adFormFields);
+  window.form.onHousingTypeChange();
   mapMainPin.removeEventListener(`mousedown`, onMainPinMousedown);
   mapMainPin.removeEventListener(`keydown`, onMainPinEnterPress);
 };
 
 const onLoadSuccess = (evt, data) => {
-  // if (!pinsCreated) {
   window.data = data;
   window.util.isEnterEvent(evt, activatePage);
   window.util.isMouseMainButtonEvent(evt, activatePage);
@@ -50,9 +48,7 @@ const onLoadSuccess = (evt, data) => {
   if (!pinsCreated) {
     window.util.renderData(window.data);
   }
-  // window.util.renderData(window.data);
-  window.form.checkRooms(adFormRoomNumberSelect.value);
-  // pinsCreated = true;
+  window.form.checkRooms(adFormRoomNumber.value);
 };
 
 const onErrorLoad = (errorMessage) => {
