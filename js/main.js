@@ -9,7 +9,9 @@ const filtersFormFields = document.querySelector(`.map__filters`).children;
 let pinsCreated = false;
 
 const onMainPinMousedown = (evt) => {
-  switchPageToActiveMode(evt);
+  if (evt.button === window.util.KeyCode.MOUSE_MAIN_BUTTON) {
+    switchPageToActiveMode(evt);
+  }
 };
 
 const onMainPinEnterPress = (evt) => {
@@ -21,8 +23,8 @@ const onMainPinEnterPress = (evt) => {
 const deactivatePage = () => {
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
-  window.form.deactivateForm(filtersFormFields);
-  window.form.deactivateForm(adFormFields);
+  window.form.deactivate(filtersFormFields);
+  window.form.deactivate(adFormFields);
   window.form.setAddressField(window.util.getMainPinCoords());
   mapMainPin.addEventListener(`mousedown`, onMainPinMousedown);
   mapMainPin.addEventListener(`keydown`, onMainPinEnterPress);
@@ -33,8 +35,8 @@ deactivatePage();
 const activatePage = () => {
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
-  window.form.activateForm(filtersFormFields);
-  window.form.activateForm(adFormFields);
+  window.form.activate(filtersFormFields);
+  window.form.activate(adFormFields);
   window.form.onHousingTypeChange();
   mapMainPin.removeEventListener(`mousedown`, onMainPinMousedown);
   mapMainPin.removeEventListener(`keydown`, onMainPinEnterPress);

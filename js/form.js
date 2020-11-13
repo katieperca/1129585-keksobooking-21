@@ -129,7 +129,7 @@ const showErrorMessage = () => {
 const resetPage = () => {
   window.main.deactivatePage();
   window.util.clearMap();
-  window.filter.resetFilters();
+  window.filter.resetAll();
   window.uploadPhoto.resetImages();
   window.util.setMainPinCenter();
   adForm.reset();
@@ -150,8 +150,8 @@ adForm.addEventListener(`submit`, onAdFormSubmit);
 adFormResetButton.addEventListener(`click`, onAdFormResetButtonClick);
 
 window.form = {
-  deactivateForm,
-  activateForm,
+  deactivate: deactivateForm,
+  activate: activateForm,
   setAddressField,
   checkRooms,
   onHousingTypeChange

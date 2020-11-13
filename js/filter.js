@@ -17,7 +17,7 @@ const priceType = {
   high: `high`
 };
 
-const resetFilters = () => {
+const resetAll = () => {
   filtersForm.reset();
 };
 
@@ -72,5 +72,5 @@ const showFiltredData = () => {
 filtersForm.addEventListener(`change`, showFiltredData);
 
 window.filter = {
-  resetFilters
+  resetAll
 };

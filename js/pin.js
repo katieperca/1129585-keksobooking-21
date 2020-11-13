@@ -30,17 +30,17 @@ const createPin = (data) => {
     if (activeCard) {
       activeCard.remove();
     }
-    window.card.openCard(data);
+    window.card.open(data);
     setPinActive();
   };
 
-  const onPinEnterPress = () => {
+  const onPinEnterPress = (evt) => {
     if (evt.keyCode === window.util.KeyCode.ENTER) {
       const activeCard = document.querySelector(`.map__card`);
       if (activeCard) {
         activeCard.remove();
       }
-      window.card.openCard(data);
+      window.card.open(data);
       setPinActive();
     }
   };
@@ -51,13 +51,13 @@ const createPin = (data) => {
   return pin;
 };
 
-const renderPins = (container, data) => {
+const renderAll = (container, data) => {
   data.forEach((element) => {
     container.appendChild(createPin(element));
   });
 };
 
-const removePins = () => {
+const removeAll = () => {
   const pins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
   pins.forEach((element) => {
     element.remove();
@@ -66,7 +66,6 @@ const removePins = () => {
 
 window.pin = {
   PinCoordinateLimit,
-  createPin,
-  renderPins,
-  removePins
+  renderAll,
+  removeAll
 };

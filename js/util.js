@@ -89,12 +89,12 @@ const setMainPinCenter = () => {
 };
 
 const clearMap = () => {
-  window.card.removeCard();
-  window.pin.removePins();
+  window.card.remove();
+  window.pin.removeAll();
 };
 
 const renderData = (data) => {
-  window.pin.renderPins(pinContainer, data.slice(0, PINS_COUNT));
+  window.pin.renderAll(pinContainer, data.slice(0, PINS_COUNT));
 };
 
 window.util = {

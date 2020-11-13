@@ -61,7 +61,7 @@ const openCard = (data) => {
   if (isMapCard) {
     isMapCard.remove();
   }
-  window.card.renderCard(map, data);
+  renderCard(map, data);
 };
 
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
@@ -145,8 +145,8 @@ const removeCard = () => {
 };
 
 window.card = {
-  openCard,
-  renderCard,
-  removeCard
+  open: openCard,
+  render: renderCard,
+  remove: removeCard
 };
 
